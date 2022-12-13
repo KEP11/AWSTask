@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+
+  api:
+    image: ${DOCKER_REGISTRY-}aws-task
+    build:
+      context: AwsTask
+      dockerfile: ../Dockerfile
+    container_name: awstask-api
+    environment:
+        USERNAME:
+    env_file:
+      - ../.local_env
+    volumes:
+      - ${USERPROFILE}/.aws:/root/.aws
+      - ../AwsTask/bin/Debug/net6.0:/app
+    ports:
+      - "8080:80"
+
+
+networks:
+  default:
+    name: aws-task-network

@@ -28,7 +28,7 @@ public class BooksDynamoDbService : IBooksDynamoDbService
         try
         {
             await _dbContext.SaveAsync(book);
-            await _sqsService.SendMessage($"The book with ISBN - {book.Isbn} was added. ");
+            await _sqsService.SendMessage($"The book with ISBN - {book.Isbn} was added/updated. ");
         }
         catch (Exception)
         {
