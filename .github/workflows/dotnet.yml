@@ -23,28 +23,39 @@ jobs:
         path: .
         dockerfile: ./Dockerfile
     
-    - name: Install AWS CLI 
-      run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install --update
+    #- name: Install AWS CLI 
+      #run: |
+       #   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        #  unzip awscliv2.zip
+         # sudo ./aws/install --update
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          #aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
-    
-    - name: Deploy to AWS
+          
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
-          aws deploy create-deployment \
-          --application-name AWSTask-app \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name AWSTask-DepGrp \
-          --description "GitHub Deployment for the AWSTask-app-${{ github.sha }}" \
-          --github-location repository=KEP11/AWSTask,commitId=${{ github.sha }}
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+    
+#    - name: Deploy to AWS
+ #     run: |
+  #        aws deploy create-deployment \
+   #      --deployment-config-name CodeDeployDefault.AllAtOnce \
+    #      --deployment-group-name AWSTask-DepGrp \
+     #     --description "GitHub Deployment for the AWSTask-app-${{ github.sha }}" \
+      #    --github-location repository=KEP11/AWSTask,commitId=${{ github.sha }}
 
         
 #    - name: Setup .NET
