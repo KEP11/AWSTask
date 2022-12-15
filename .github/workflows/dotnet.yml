@@ -44,7 +44,7 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name AWSTask-DepGrp \
           --description "GitHub Deployment for the AWSTask-app-${{ github.sha }}" \
-          --github-location repository=${{ github.event.repository.name }},commitId=${{ github.sha }}
+          --github-location repository=KEP11/AWSTask,commitId=${{ github.sha }}
 
         
 #    - name: Setup .NET
