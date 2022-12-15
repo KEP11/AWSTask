@@ -41,8 +41,7 @@ jobs:
           
     - name: Build, tag, and push image to Amazon ECR
       run: |
-        #aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 042072295322.dkr.ecr.us-east-1.amazonaws.com \
-        #docker build -t awstask . \
+        docker build -t awstask . \
         docker tag awstask:latest 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest \
         docker push 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
     
