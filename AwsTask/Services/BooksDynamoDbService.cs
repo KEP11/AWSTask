@@ -4,11 +4,11 @@ namespace AwsTask.Services;
 
 public interface IBooksDynamoDbService
 {
-    Task UpsertAsync(BookModel book);
+	Task<BookModel> UpsertAsync(BookModel book);
 
     Task<BookModel> GetAsync(string isbn);
-    
-    Task DeleteAsync(string isbn);
+
+    Task<string> DeleteAsync(string isbn);
 }
 
 public class BooksDynamoDbService : IBooksDynamoDbService
@@ -23,12 +23,13 @@ public class BooksDynamoDbService : IBooksDynamoDbService
         _sqsService = sqsService;
     }
 
-    public async Task UpsertAsync(BookModel book)
+    public async Task<BookModel> UpsertAsync(BookModel book)
     {
         try
         {
             await _dbContext.SaveAsync(book);
             await _sqsService.SendMessage($"The book with ISBN - {book.Isbn} was added/updated. ");
+            return book;
         }
         catch (Exception)
         {
@@ -44,9 +45,10 @@ public class BooksDynamoDbService : IBooksDynamoDbService
         return book;
     }
 
-    public async Task DeleteAsync(string isbn)
+    public async Task<string> DeleteAsync(string isbn)
     {
         await _dbContext.DeleteAsync<BookModel>(isbn);
         await _sqsService.SendMessage($"The book with ISBN - {isbn} was deleted. ");
+        return isbn;
     }
 }

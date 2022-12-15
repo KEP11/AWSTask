@@ -6,13 +6,14 @@ using Amazon.SQS;
 using AwsTask.Extensions;
 using AwsTask.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 SetAwsCredentials();
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration; // allows both to access and to set up the config
 IWebHostEnvironment environment = builder.Environment;
-// Add services to the container.
 
 BuildConfiguration(environment);
 
@@ -21,7 +22,15 @@ services.Configure<SqsSettings>(configuration.GetSection(nameof(SqsSettings)));
 
 services.AddControllers();
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+services.AddSwaggerGen(s =>
+	{
+		var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+		var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+		s.IncludeXmlComments(xmlPath, true);
+		s.SwaggerDoc("v1", new OpenApiInfo { Title = "Aws onboarding task", Version = "v1" });
+		s.EnableAnnotations();
+	}
+	);
 services.AddAWSService<IAmazonSQS>();
 services.AddAWSService<IAmazonS3>();
 
