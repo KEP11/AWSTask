@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "main" ]
     
-env:
-  ECR_REPOSITORY: awstask
-
 jobs:
   build:
 
@@ -32,18 +29,19 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
     
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+   # - name: Configure AWS credentials
+   #   uses: aws-actions/configure-aws-credentials@v1
+   #   with:
+   #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+   #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+   #       aws-region: us-east-1
           
     - name: Build, tag, and push image to Amazon ECR
       run: |
-        docker build -t awstask . \
-        docker tag awstask:latest 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest \
-        docker push 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 042072295322.dkr.ecr.us-east-1.amazonaws.com \
+            docker build -t awstask . \
+            docker tag awstask:latest 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest \
+            docker push 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
     
 #    - name: Deploy to AWS
  #     run: |
