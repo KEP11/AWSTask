@@ -8,10 +8,10 @@ COPY AwsTask .
 #COPY ["AwsTask/AwsTask.csproj", ""]
 RUN dotnet restore "AwsTask.csproj"
 
-RUN dotnet build "AwsTask.csproj" -c Debug -o /app/build
+RUN dotnet build "AwsTask.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AwsTask.csproj" -c Debug -o /app/publish
+RUN dotnet publish "AwsTask.csproj" -c Release -o /app/publish
 
 #docker run -d -p 8080:80 -e ASPNETCORE_ENVIRONMENT=development -v "%UserProfile%\.aws\credentials":/root/.aws/credentials:ro --name myapp awstask
 
