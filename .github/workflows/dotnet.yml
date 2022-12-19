@@ -36,12 +36,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
           
-    - name: Build, tag, and push image to Amazon ECR
+    - name: Build, tag, and push image
       run: |
             aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 042072295322.dkr.ecr.us-east-1.amazonaws.com
             docker build -t awstask .
             docker tag awstask:latest 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
             docker push 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
+            docker pull 042072295322.dkr.ecr.region.amazonaws.com/awstask:latest
+            docker run --rm 042072295322.dkr.ecr.region.amazonaws.com/awstask:latest
     
 #    - name: Deploy to AWS
  #     run: |
