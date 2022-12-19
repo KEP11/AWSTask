@@ -42,25 +42,6 @@ jobs:
             docker build -t awstask .
             docker tag awstask:latest 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
             docker push 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
-            docker pull 042072295322.dkr.ecr.region.amazonaws.com/awstask:latest
-            docker run --rm 042072295322.dkr.ecr.region.amazonaws.com/awstask:latest
-    
-#    - name: Deploy to AWS
- #     run: |
-  #        aws deploy create-deployment \
-   #      --deployment-config-name CodeDeployDefault.AllAtOnce \
-    #      --deployment-group-name AWSTask-DepGrp \
-     #     --description "GitHub Deployment for the AWSTask-app-${{ github.sha }}" \
-      #    --github-location repository=KEP11/AWSTask,commitId=${{ github.sha }}
-
-        
-#    - name: Setup .NET
-#      uses: actions/setup-dotnet@v3
-#     with:
-#        dotnet-version: 6.0.x
-#    - name: Restore dependencies
-#      run: dotnet restore
-#    - name: Build
-#      run: dotnet build --no-restore
-#    - name: Test
-#      run: dotnet test --no-build --verbosity normal
+            docker pull 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
+            docker run --rm 042072295322.dkr.ecr.us-east-1.amazonaws.com/awstask:latest
+  
