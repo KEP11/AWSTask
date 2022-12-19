@@ -9,7 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
+#if DEBUG
 SetAwsCredentials();
+#endif
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration; // allows both to access and to set up the config
